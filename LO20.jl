@@ -22,18 +22,20 @@ md"""
 # ╔═╡ c38e9521-de2d-4170-870a-34ca0daff86e
 function trapezoid(a,b,f,points)
 	fa = f(a); fb = f(b)
-	push!(points,a)
-	push!(points,b)
+	push!(points,[a,fa])
+	push!(points,[b,fb])
 	return 0.5*(b-a)*(fa+fb)
 end
 
 # ╔═╡ 65a2824c-0004-4959-8b37-de59e9e6e2e1
 function Simpson(a,b,f,points)
+	fa = f(a); fb = f(b)
 	c = a + 0.5*(b-a)
-	push!(points,a)
-	push!(points,b)
-	push!(points,c)
-	return (b-a)*(f(a)+4*f(c)+f(b))/6
+	fc = f(c)
+	push!(points,[a,fa])
+	push!(points,[b,fb])
+	push!(points,[c,fc])
+	return (b-a)*(fa+4*fc+fb)/6
 end
 
 # ╔═╡ 9dd230fd-f086-49f1-8629-2c0e0daf5966
@@ -89,14 +91,18 @@ md"""
 Extra Credit opportunity. Fix the quadrature above.  Plot the function and lines corresponding to the evaluaiton intervals
 """
 
+# ╔═╡ a372eb06-713d-428f-8c0b-fec1667a1e84
+
+
 # ╔═╡ f1f97a9f-ef9b-4288-a549-8beb98a2032f
 function desiredplot(a,b,f,quadR,relerr,lvl,RecQ,str)
 	points0 = []
-	RecQ(a,b,f,quadR,relerr,lvl,points0)
-	p=plot(f,a,b, legend = false,title = str)
+	z = RecQ(a,b,f,quadR,relerr,lvl,points0)
+	legendstring = "Integral approximant value = $z"
+	p=plot(f,a,b, label = legendstring,title = str)
 	for i=1:length(points0)
-		x = points0[i]
-		plot!(p,[x,x],[0,f(x)])
+		x = points0[i][1];fx = points0[i][2]
+		plot!(p,[x,x],[0,fx],label =false)
 	end
 	return p
 end
@@ -106,6 +112,12 @@ desiredplot(0,1,f2,trapezoid,0.001,0,RecQ,"x^2 trapezoid adaptive quadrature")
 
 # ╔═╡ 69ae7423-83f4-422f-a47e-5e73d9acee91
 desiredplot(0,4,f3,Simpson,0.00001,0,RecQ,"sin(e^x) Simpson adaptive quadrature")
+
+# ╔═╡ 6efce634-89fc-4652-b5cb-aad4f0fac3b9
+g(x) = x^4+x^3+sin(50x)-x^2
+
+# ╔═╡ d4e6f193-ccb2-4b24-a00a-de3bb3453b5d
+desiredplot(-2,2,g,Simpson,0.001,0,RecQ,"x^4+x^3+sin(50x)-x^2 Simpson adaptive quadrature")
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1219,8 +1231,11 @@ version = "1.4.1+1"
 # ╠═d3dbaf2f-642c-4757-ae4e-8ae0ab87f9d0
 # ╠═4b24f2a7-ce4d-4ccd-ba2e-c2af5bfaf623
 # ╟─27a6d621-6dea-4650-bdd3-be9e90d03314
+# ╠═a372eb06-713d-428f-8c0b-fec1667a1e84
 # ╠═f1f97a9f-ef9b-4288-a549-8beb98a2032f
 # ╠═9701cf0f-1a55-46d3-9089-4c72810e0539
 # ╠═69ae7423-83f4-422f-a47e-5e73d9acee91
+# ╠═6efce634-89fc-4652-b5cb-aad4f0fac3b9
+# ╠═d4e6f193-ccb2-4b24-a00a-de3bb3453b5d
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
