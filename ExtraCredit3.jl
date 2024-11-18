@@ -4,34 +4,41 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 7568e14a-a5cd-4a7c-aad6-fe385b4b6ee0
+# ╔═╡ 3849b625-12b8-4b0c-b893-10bea5bec05f
 using LinearAlgebra
 
-# ╔═╡ 40aca690-a3a6-11ef-0c19-c9831e2db6e4
+# ╔═╡ 6c843526-c610-4606-9db1-5469fad46e9a
 md"""
 # Heat equation extra credit
 """
 
-# ╔═╡ a046db6b-8eff-4b34-b4dc-96185eae9bec
+# ╔═╡ 1e5a55a7-0c64-41d7-b7ca-25356be4a0f8
 md"""
 ###### $F(y) = \dfrac{1}{\sqrt{4\pi}}\int_{-\infty}^{\infty}e^{\dfrac{-(x-y)^{2}}{4}}f(x)dx$
 """
 
-# ╔═╡ fc97b29b-9370-4e12-ac3d-61cc3ab831f7
-
-
-# ╔═╡ febe189b-6aef-440e-93e3-c62c4e84a6eb
+# ╔═╡ 9be5da64-88f5-45f3-be43-74c598a1ff6a
 md"""
 Let $t = \dfrac{(x-y)}{2}$
 """
 
-# ╔═╡ 32603b51-a31d-4790-861a-3c027db655db
+# ╔═╡ e3c3a47e-e77e-4555-a8e3-1320ea9101a4
 md"""
 Then the integral becomes
-###### $F(y) = \dfrac{1}{\sqrt{4\pi}}\int_{-\infty}^{\infty}e^{-t^{2}}f(t)dt$
+###### $F(y) = \dfrac{1}{\sqrt{4\pi}}\int_{-\infty}^{\infty}e^{-t^{2}}f^{*}(t)dt$
 """
 
-# ╔═╡ a0deba76-8a95-4e71-a87c-52283af15a97
+# ╔═╡ 45c803aa-3905-4f3c-9fd8-203f3574ef9f
+md"""
+Earlier the substituition was made $t=\dfrac{x-y}{2}$ was made. Since the initial heat distribution is $\cos(\sin(x)) + \sin(\cos(x))$, we must solve for x in terms of t, and y to find what to plug in for the funciton of $F(y)$, which is the heat disttribution after one unit time. random points y will be chosen to compare iteration values. Also, solving for x is $2t+y$. Subbing back into the funciton 2t + y, for an array of y's, we get our quadrature formula. Passing k through the function, k will be the array of y values of interest. And we can't forget, the differential substitution puts us off by a factor of 1/2, so must multiply the entire formula by 2 
+"""
+
+# ╔═╡ be211c5b-3eab-466f-abeb-c900ceaec05b
+md"""
+#### Ask ChatGPT: Write a script to foil polynomials in julia
+"""
+
+# ╔═╡ 0cc786f0-a50f-11ef-1124-fbdbbb7c69b3
 function polynomialfoil(p1,p2)
     # p1 and p2 are arrays of coefficients, where the i-th element is the coefficient for t^i
     result_degree = length(p1) + length(p2) - 2
@@ -47,13 +54,7 @@ function polynomialfoil(p1,p2)
     return result
 end
 
-# ╔═╡ f5da61bd-6154-4083-a11b-6a203a2079df
-x = [0,2,1]; y = [0,1]
-
-# ╔═╡ 0392b7bb-dd4c-4fcb-b57a-ad35311946f8
-polynomialfoil(x,y)
-
-# ╔═╡ 23d7b167-4ce3-4991-9fbd-9e48898074d0
+# ╔═╡ 624f4b45-c518-47fa-9f4e-fcc2155dac1d
 function doublefactorial(n)
 	list = [i for i = 1:n]
 	product = 1
@@ -63,13 +64,7 @@ function doublefactorial(n)
 	return product
 end
 
-# ╔═╡ 4eee3025-6a55-41f1-94b3-2d6791e61257
-doublefactorial(5)
-
-# ╔═╡ 6f54c03a-4ecd-47e5-ba7e-0a3d32b97003
-doublefactorial(4)
-
-# ╔═╡ fe0f6e86-bd20-42f2-a1cf-e98c292c3c5b
+# ╔═╡ ccb7b862-df6c-43fb-a42e-e8308509019e
 function innerproduct(f,g)
 	h = polynomialfoil(f,g)
 	sum = 0 ; a = sqrt(pi)
@@ -81,19 +76,10 @@ function innerproduct(f,g)
 end
 	
 
-# ╔═╡ 9a86bebd-2eb7-4a96-93bc-6114a61ddf9d
-innerproduct([0,0,1],[0,0,1])
-
-# ╔═╡ 8c5fbdf4-4920-4a13-a40a-cf2981868b7e
-sqrt(pi)
-
-# ╔═╡ 0510381c-c5c7-4dc0-b9b8-984f497cc6e5
-innerproduct([1],[0,1])
-
-# ╔═╡ 6f08ba0a-d3e0-4944-b3c1-258c1fab8d8d
-function Basis(n)
+# ╔═╡ 8ecd0fac-c9db-4996-bb38-2d12689e5da4
+function Basis(n) #Gram_schmidt orthonormalization to generate basis
 	z = []
-	for i = 1:n+1 #ChatGPT's code
+	for i = 1:n+1 #ChatGPT's code wrote the row code
         row = [j == i ? 1 : 0 for j in 1:n+1] 
         push!(z, row)
     end
@@ -113,29 +99,34 @@ function Basis(n)
 	return z
 end
 
-# ╔═╡ ec827bac-c0c4-4b69-8d90-655caa262481
-B = Basis(5)
+# ╔═╡ db7e86cb-265d-4026-9bb8-a2ba09af4e54
+B = Basis(17);
 
-# ╔═╡ ee717841-ec9f-49e2-8e88-76a8e79db970
-innerproduct(B[2],B[2])
+# ╔═╡ 6e02001e-f179-47d9-a402-ee49df529bc9
+innerproduct(B[13],B[13])
 
-# ╔═╡ b32fda0d-4548-415b-b1eb-953a4a0a9641
-innerproduct(B[4],B[3])
+# ╔═╡ 0c9fab2f-d78d-4d7e-b75e-24c31a71a874
+innerproduct(B[13],B[12])
 
-# ╔═╡ d85ee79a-1bae-4c9c-850e-74d5867795c4
-innerproduct(B[4],B[4])
+# ╔═╡ ac1c22c8-eb6c-415f-a897-74f7bdf25360
+md"""
+Passes orthonormality w.r.t inner product
+"""
 
-# ╔═╡ 17404900-4e50-4472-933c-458734f77d49
+# ╔═╡ b9b88780-34e8-44bd-962c-6c27b7a5bdc7
+B[10]
+
+# ╔═╡ 1b63c404-15de-42e0-9e11-23f7e8845fa0
 function Newton1(x,x1,f,fp)
 	fpx = fp(x)
 	if abs(fpx) > 100 *  eps(Float64)
 		return x - f(x)/fpx
 	else
-		exit(-1)
+		throw(DomainError(x, "Derivative too close to zero"))
 	end
 end
 
-# ╔═╡ 75e7ef11-0755-483f-abff-6bc72284ae9a
+# ╔═╡ eae93a04-2838-4e76-87df-c991ef4d0d87
 function FindRoot1(a,b,f,fp,g,eps,delta,niter)
 	for n = 1:niter
 		if (abs(a-b) <= eps*abs(a)) && (abs(f(a)) <= delta)
@@ -144,229 +135,177 @@ function FindRoot1(a,b,f,fp,g,eps,delta,niter)
 		x = g(a,b,f,fp)
 		b = a; a = x
 	end
-	exit(-2)
+	throw(ConvergenceException("Failed to converge in $niter iterations"))
 end
 
-# ╔═╡ d9030718-fe65-4a1e-8cda-7af21b0ee458
+# ╔═╡ 67c25763-1bb5-4f02-bf61-4ed2d5dc79c5
+function nthdegreepolynomial(B,n,x)
+	p = B[n+1]
+	sum = 0
+	for i = 1:length(p)
+		sum+= p[i]*x^(i-1)
+	end
+	return sum
+end
+
+# ╔═╡ f4a8480d-d62e-44ab-acb8-2d2c779caea5
+function nthdegreepolynomialp(B,n,x) #Derivative only necessary for Newton's method
+	p = B[n+1]
+	sum = 0
+	for i = 1:length(p)
+		sum += p[i]*(i-1)*x^(i-2)
+	end
+	return sum
+end
+
+# ╔═╡ f14daa4a-4b6b-4438-af62-06e5f918c318
+B[12]
+
+# ╔═╡ d89e9a1c-e39e-4e0b-8b6e-cc0b3c7a2f8e
+function secant(x0,x1,f,fp)
+	fx0 = f(x0);fx1 = f(x1)
+	s = (fx1-fx0)/(x1-x0)
+	return x1 - fx1/s
+end
+
+# ╔═╡ c55038f8-a8f2-406e-90d7-013f06c29ae7
+function find_rootsbasis(B,n)
+	function polynomial(x)
+		return nthdegreepolynomial(B,n,x)
+	end
+	function polynomialp(x)
+		return nthdegreepolynomialp(B,n,x)
+	end
+	roots = []
+	a = -(n)/2; b = a+1
+	for i in 1:n
+		root, iterations = FindRoot1(a,b,polynomial,polynomialp,secant,1e-10,1e-10,40) #Decided on secant instead of newton, prioritizing finding roots to speed
+		push!(roots,root)
+		a = root+0.7; b = a + 0.5
+	end
+	return roots
+end
+
+# ╔═╡ 049d014c-dc60-4bf3-9c6e-96be466e8775
+find_rootsbasis(B,4)
+
+# ╔═╡ ee7b1f74-d4e6-48d3-a5d4-e70294d7e6b0
+find_rootsbasis(B,6)
+
+# ╔═╡ 8d09cbcf-e421-4f32-911c-e28565afff3b
+find_rootsbasis(B,8)
+
+# ╔═╡ be2d3404-270d-4d7b-ab2d-15acde813b28
+find_rootsbasis(B,2)
+
+# ╔═╡ b999cb05-7454-4bb9-bfaa-0cc9dca2fd82
+find_rootsbasis(B,3)
+
+# ╔═╡ 1a3e608e-71e4-4d9c-92d9-ecc08bd03b0c
+find_rootsbasis(B,5)
+
+# ╔═╡ 9c07b430-3199-4be5-9cef-94773193fa85
+find_rootsbasis(B,8)
+
+# ╔═╡ 52ef7b59-4e08-490d-a89f-c7fc9c0c39c8
+find_rootsbasis(B,7)
+
+# ╔═╡ 2abd0531-812e-484e-b7bc-4f045be6f777
+find_rootsbasis(B,9)
+
+# ╔═╡ 4805b26d-2ed0-46b5-9286-f160b30b4cb9
+find_rootsbasis(B,10)
+
+# ╔═╡ 1ea239a7-8263-4d12-a1e3-7f35183260ba
+find_rootsbasis(B,11)
+
+# ╔═╡ 0551f5be-d362-4204-bfeb-ca7ef8474013
+R=find_rootsbasis(B,12)
+
+# ╔═╡ 3ad28df4-5cbf-452c-abae-85241ff1ba4f
+find_rootsbasis(B,13)
+
+# ╔═╡ 640f864a-3c20-4a47-8fd5-92bc1ad23349
 md"""
-Will start churning out the Gauss integrals, based on n points
+All the code from above is trouble shooting my guesses for where the roots will be. It seems difficult to get the roots accurate for the 13th degree polynomial, and doesn't seem worth it to try and improve the guess to go higher, as each guess at this point has a high risk of messing up the previous polynomial's roots
 """
 
-# ╔═╡ fb358092-3af3-49f9-8dcb-cbb7c505e830
-phi2 = B[3]
+# ╔═╡ a1dd59a4-7ceb-4384-8a5b-71c9f7aacb70
+function findweights(B,n)
+	R = find_rootsbasis(B,n)
+	A = [R[j]^(i-1) for i in 1:n, j in 1:length(R)] #Claude A.i. helped me implement this matrix
+	b = zeros(n)
+	for i = 1:n
+		if i % 2 == 0
+			b[i] = 0
+		else
+		v = zeros(Int((i+1)/2))
+		v[end] = 1
+		b[i] = innerproduct(v,v)
+		end
+	end
+	W = A\b
+	return W		
+end
 
-# ╔═╡ daa64d26-5aae-4a4d-82a4-5f082251bafa
-Phi2(x) = phi2[1] + phi2[3]*x^2
+# ╔═╡ 36a62fa8-f9a6-4409-bce1-dfffecb1fc6c
+findweights(B,4)
 
-# ╔═╡ 9b35db3f-d0c9-429e-9155-07982db84b35
-Phi2p(x) = 2*phi2[3]*x
+# ╔═╡ c64288e3-60be-4b7d-8dd3-8f64a1de5e69
+f(x) = cos(sin(x)) + sin(cos(x)) #Function that I'm trying to integrate
 
-# ╔═╡ d4d849e1-bee4-40f2-bae1-de299d44bfe7
-#R2 = FindRoot1(0,0.2,phi3,phi3p,Newton1,1e-10,1e-10,20)
+# ╔═╡ 616dc57f-717e-4465-81e5-a3fe0b4c5592
+K = [i for i=0:3] #These are the y points
 
-# ╔═╡ 6c47327e-8bf6-4a2c-bf97-1058a7da2dd3
-R2_1 = FindRoot1(-1.5,0.5,Phi2,Phi2p,Newton1,1e-10,1e-10,20)
+# ╔═╡ 10e386c2-ec87-4219-81b9-3c71b1c6edc7
+function Gauss(B,n,f,k)
+	W = findweights(B,n); R = find_rootsbasis(B,n); sum = 0
+	for i = 1:length(W)
+		sum += W[i]*f(2*R[i]+k) #Transformation of evaluation point based on substitution
+	end
+	return 2*sum #Can't forget factor of two from substitution of differential
+end
 
-# ╔═╡ a35a03b4-9080-43fd-8591-1ceb3c2dbd4b
-R2_2 = FindRoot1(0.5,1,Phi2,Phi2p,Newton1,1e-10,1e-10,20)
+# ╔═╡ 018224cb-6e74-4a5f-966a-85a6fb571b44
+[Gauss(B,12,f,i) for i = 0:3]
 
-# ╔═╡ 3f3e926d-0125-4b80-9eb1-4d21f40610a3
-r2_1 = R2_1[1]; r2_2 = R2_2[1]
+# ╔═╡ 9d924e36-b736-49f5-b3e5-456a63737973
+[Gauss(B,11,f,i) for i = 0:3]
 
-# ╔═╡ c1177a92-9154-4634-95da-b5dfcdbca636
-A2 = [1 1; r2_1 r2_2]
+# ╔═╡ 0b3792e2-709c-42a9-adc8-22aca86d9825
+[Gauss(B,10,f,i) for i = 0:3]
 
-# ╔═╡ 792262d3-335e-41cb-b206-f18c7c858cfc
-b2 = [innerproduct([1],[1]);0]
+# ╔═╡ d1679994-b5b7-4894-8f0e-be54951065c8
+[Gauss(B,9,f,i) for i = 0:3]
 
-# ╔═╡ c27353e2-6ef7-4124-9e17-78fe739bd6df
-W2 = A2\b2
+# ╔═╡ e2eb041c-f501-42de-ad32-0a8cfbe887a4
+[Gauss(B,8,f,i) for i = 0:3]
 
-# ╔═╡ a90bb5e0-4ea7-4eba-9c95-5b7e3d3a8618
+# ╔═╡ 380cf422-e6e0-4d73-82ed-b7752647b40a
+[Gauss(B,7,f,i) for i = 0:3]
+
+# ╔═╡ 8edc181b-29c7-4cb6-9d44-c1396d8bb9e8
+[Gauss(B,6,f,i) for i = 0:3]
+
+# ╔═╡ 786b8517-2fdc-4491-a171-beeb5d330e71
+[Gauss(B,5,f,i) for i = 0:3]
+
+# ╔═╡ 43cb71e1-c5ae-4da0-aa79-83ddc912651c
+[Gauss(B,4,f,i) for i = 0:3]
+
+# ╔═╡ 9b03b118-3d18-4b2e-97a0-ec1a05c4a0cb
+[Gauss(B,3,f,i) for i = 0:3]
+
+# ╔═╡ 23e0a976-425f-4ee9-80ad-76199d0ada6b
+[Gauss(B,2,f,i) for i = 0:3]
+
+# ╔═╡ 3ab0b98e-81c3-4d5f-80cf-2be79cf5e988
+[Gauss(B,1,f,i) for i = 0:3]
+
+# ╔═╡ ab7a46d5-8d87-4ca3-8e89-5414e6cc1141
 md"""
-Earlier the substituition was made $t=\dfrac{x-y}{2}$ was made. Since the initial heat distribution is $\cos(\sin(x)) + \sin(\cos(x))$, we must solve for x in terms of t, and y to find what to plug in for the funciton of $F(y)$, which is the heat disttribution after one unit time. random points y will be chosen to compare iteration values. This vector will be k, which has been passed through the gauss functions. Also, solving for x is $2t+y$. Subbing back into the funciton 2t + y, for an array of y's, we get our quadrature formula. Passing k through the function, k will be the array of y values of interest. 
+Am able to get three significant digits of accuracy using this Gauss method, any more digits would be difficult
 """
-
-# ╔═╡ bc537547-e6e6-428a-9a3d-14bb63199ff3
-function Gauss2test(f,k)
-	w1 = W2[1]; w2 = W2[2]
-	return w1*f(r2_1) + w2*f(r2_2)
-end
-
-# ╔═╡ 122a0f69-f229-4942-b2c7-4232677169cf
-test(x) = 3x^3 +2x -1
-
-# ╔═╡ 0cb70469-093f-4132-8845-14a956a13f9d
-Gauss2test(test,1)
-
-# ╔═╡ 60ced504-525f-47ee-89ca-ce8bac38825f
-function Gauss2(f,k)
-	w1 = W2[1]; w2 = W2[2]
-	return w1*f(2*r2_1+k) + w2*f(2*r2_2+k)
-end
-
-# ╔═╡ 906c0ee5-d02a-46a9-a344-e144c82a60b2
-phi3 = B[4]
-
-# ╔═╡ e1db3fba-2ee7-4c7d-8a37-55ba219eb93f
-Phi3(x) = phi3[2]*x + phi3[4]*x^3
-
-# ╔═╡ 5d1196a3-f698-47e3-a7da-a9dcbe5be81e
-Phi3p(x) = phi3[2] + 3*phi3[4]*x^2
-
-# ╔═╡ a569e02c-a546-465f-94d2-4cbb9826281f
-R3_1 = FindRoot1(-2,-1,Phi3,Phi3p,Newton1,1e-10,1e-10,20)
-
-# ╔═╡ a6cc5fbb-3a12-4de6-ab7b-8151ddfdfe30
-R3_2 = FindRoot1(-0.5,0.5,Phi3,Phi3p,Newton1,1e-10,1e-10,20)
-
-# ╔═╡ ed6c6519-54fb-48f3-8233-53b64ae1233c
-R3_3 = FindRoot1(1,2,Phi3,Phi3p,Newton1,1e-10,1e-10,20)
-
-# ╔═╡ b1e78c65-f530-41ce-a08a-d113433568e9
-r3_1 = R3_1[1]; r3_2 = R3_2[1]; r3_3 = R3_3[1]
-
-# ╔═╡ 8e2217b3-ef3c-4f25-bf3c-9c16933090dc
-A3 = [1 1 1;r3_1 r3_2 r3_3;r3_1^2 r3_2^2 r3_3^2]
-
-# ╔═╡ c17819f7-b446-471d-90bd-79c2e2a778fe
-b3 = [innerproduct([1],[1]);0;innerproduct([0,1],[0,1])]
-
-# ╔═╡ d838413a-dc20-4df7-9bc4-a7666e972a94
-W3 = A3\b3
-
-# ╔═╡ bf3ee2e3-3637-4827-a6b5-629b564c1c25
-function Gauss3(f,k)
-	w1 = W3[1]; w2 = W3[2]; w3 = W3[3]
-	return (1/sqrt(4*pi))*w1*f(2*r3_1+k) + w2*f(2*r3_2+k) + w3*f(2*r3_3+k)
-end
-
-# ╔═╡ 66ce8e1d-c816-49e0-9275-6332d3339e86
-function Gauss3test(f,k)
-	w1 = W3[1]; w2 = W3[2]; w3 = W3[3]
-	return (1/sqrt(4*pi))*w1*f(r3_1*2+k) + w2*f(r3_2*2+k) + w3*f(r3_3*2+k)
-end
-
-# ╔═╡ dd911ca6-e41f-4192-979c-7dc7017c8568
-phi4 = B[5]
-
-# ╔═╡ 850db5d8-f5f6-48be-9496-51860e38f129
-Phi4(x) = (phi4[5]*x^2 + phi4[3])*x^2 + phi4[1] 
-
-# ╔═╡ b81081c0-c4b1-45f3-9533-90fa4a593267
-Phi4p(x) = (4*phi4[5]*x^2 + 2*phi4[3])*x 
-
-# ╔═╡ 6f054971-f602-4b8d-9f9c-87ebf80eb756
-R4_1 = FindRoot1(-2,-1.5,Phi4,Phi4p,Newton1,1e-10,1e-10,20)
-
-# ╔═╡ 5e65bb1c-9f30-46ae-9f70-9f8cc1b1d5a8
-R4_2 = FindRoot1(-1,-0.5,Phi4,Phi4p,Newton1,1e-10,1e-10,20)
-
-# ╔═╡ 24694e29-8f91-440a-9ddb-12b4653e72a2
-R4_3 = FindRoot1(0.5,1.0,Phi4,Phi4p,Newton1,1e-10,1e-10,20)
-
-# ╔═╡ 18e2137e-7f4e-4e22-b434-92a478a86326
-R4_4 = FindRoot1(1.5,2,Phi4,Phi4p,Newton1,1e-10,1e-10,20)
-
-# ╔═╡ 169d5c32-8fa3-46f0-bc70-1ea72b3b3a55
-r4_1 = R4_1[1]; r4_2 = R4_2[1];r4_3 = R4_3[1];r4_4 = R4_4[1];
-
-# ╔═╡ 47317edc-2229-4b66-a36c-f180fead7d99
-A4 = [1 1 1 1 ;r4_1 r4_2 r4_3 r4_4;r4_1^2 r4_2^2 r4_3^2 r4_4^2; r4_1^3 r4_2^3 r4_3^3 r4_4^3]
-
-# ╔═╡ 11c9a924-677c-48b0-a613-0c567acbc93e
-[r4_1 ,r4_2, r4_3 ,r4_4]
-
-# ╔═╡ fd3d454e-f0c4-4dfd-b488-bfc46e294cf4
-b4 = [innerproduct([1],[1]);0;innerproduct([0,1],[0,1]);0]
-
-# ╔═╡ ff4858ee-ae91-473c-8cd9-812720ec0e9d
-W4 = A4\b4
-
-# ╔═╡ ed06b821-0710-4a48-ad25-7ccb4343dacb
-function Gauss4(f,k)
-	w1 = W4[1];w2 = W4[2];w3 = W4[3];w4 = W4[4]
-	return (1/sqrt(4*pi))*w1*f(2*r4_1+k)+w2*f(2*r4_2+k)+w3*f(2*r4_3+k)+w4*f(2*r4_4+k)
-end
-
-# ╔═╡ 484aa27e-7509-44e9-b269-86b9ab839973
-phi5 = B[6]
-
-# ╔═╡ 1667da50-0575-41a2-afaf-899b1b5256ef
-Phi5(x) = (phi5[6]*x^2 + phi5[4])*x^3 + phi5[2]*x
-
-# ╔═╡ ca6f3cfd-326d-4d55-99d8-ebc99741d9e3
-Phi5p(x) = (5*phi5[6]x^2 + 3*phi5[4])*x^2 + phi5[2]
-
-# ╔═╡ 20a4092f-dbef-4e79-ba02-58a2c2239786
-R5_1 = FindRoot1(-2.5,-2,Phi5,Phi5p,Newton1,1e-10,1e-10,20);R5_2 = FindRoot1(-1.3,-1,Phi5,Phi5p,Newton1,1e-10,1e-10,20);R5_3 = FindRoot1(-0.1,0.1,Phi5,Phi5p,Newton1,1e-10,1e-10,20);R5_4 = FindRoot1(1,1.3,Phi5,Phi5p,Newton1,1e-10,1e-10,20);R5_5 = FindRoot1(2,2.5,Phi5,Phi5p,Newton1,1e-10,1e-10,20)
-
-# ╔═╡ b88f3720-a6f0-4cb4-8caa-73a41078b57d
-r5_1 = R5_1[1]; r5_2 = R5_2[1];r5_3 = R5_3[1];r5_4 = R5_4[1];r5_5 = R5_5[1]
-
-# ╔═╡ dbc53e20-619d-4879-b46b-c30bab0fd9ef
-A5 = [1 1 1 1 1;r5_1 r5_2 r5_3 r5_4 r5_5;r5_1^2 r5_2^2 r5_3^2 r5_4^2 r5_5^2;r5_1^3 r5_2^3 r5_3^3 r5_4^3 r5_5^3;r5_1^4 r5_2^4 r5_3^4 r5_4^4 r5_5^4]
-
-# ╔═╡ b8568d67-149c-4b05-959d-da68c9cce24a
-b5 = [innerproduct([1],[1]);0;innerproduct([0,1],[0,1]);0;innerproduct([0,0,1],[0,0,1])]
-
-# ╔═╡ ee7b024b-2372-42aa-aac4-a5f4b6dfe1b8
-W5 = A5\b5
-
-# ╔═╡ b80f1681-9e80-47ad-9251-8c96a7a78217
-function Gauss5(f,k)
-	w1 = W5[1];w2 = W5[2];w3 = W5[3];w4 = W5[4];w5 = W5[5];
-	return (1/sqrt(4*pi))*w1*f(2*r5_1+k)+w2*f(2*r5_2+k)+w3*f(2*r5_3+k)+w4*f(2*r5_4+k)+w5*f(2*r5_5 +k)
-end
-
-# ╔═╡ daf41caa-a4da-4af9-9dc8-f609e81a7ed9
-function f(x)
-	return sin(cos(x)) + cos(sin(x))
-end
-
-# ╔═╡ 62abf93c-a750-4119-b0db-ffbcc6d639e7
-md"""
-Interested in y = 0,1,2,3
-"""
-
-# ╔═╡ 3c005c45-1902-43a7-af6b-c828e26a7407
-K = [i for i = 0:3]
-
-# ╔═╡ 1b4a817b-7b66-42e9-8d33-ae25243220a6
-Gauss3test.(f,K)
-
-# ╔═╡ e04204bd-e9dc-4e0c-bf8b-d14e1081d2ec
-md"""
-Integral calculators estimated values for 
-###### $F(y) = \dfrac{1}{\sqrt{4\pi}}\int_{-\infty}^{\infty}e^{\dfrac{-(x-y)^{2}}{4}}(\cos(\sin(x))+\sin(\cos(x)))dx$
-are
-
-[1.09317
-0.938385
-0.627705
-0.448713]
-"""
-
-# ╔═╡ 5363e1fd-8ba2-445b-8f1f-353f94cb88a0
-intcalculatorvalues = (1/sqrt(4pi)).*[3.875197554120239,3.326488800239226,2.225158038987561,1.590644453177028]
-
-# ╔═╡ 2dbdef20-5c4a-4dc5-a009-c1382a97bc04
-intcalculatorvalues
-
-# ╔═╡ 5e9ee408-00fe-4137-89bf-5d3681499fb4
-Gauss2.(f,K)
-
-# ╔═╡ e75dfd47-2be5-4152-9e33-554686fd61ef
-Gauss3.(f,K)
-
-# ╔═╡ ac3f9948-73a6-4825-a32d-87ab1213de74
-Gauss4.(f,K)
-
-# ╔═╡ deea5c6c-68e1-4457-86b7-be0468037482
-Gauss5.(f,K)
-
-# ╔═╡ 9bc09662-419f-40df-8d32-040a90a4036a
-Gauss5.(f,K)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -409,90 +348,60 @@ version = "5.8.0+1"
 """
 
 # ╔═╡ Cell order:
-# ╠═40aca690-a3a6-11ef-0c19-c9831e2db6e4
-# ╠═a046db6b-8eff-4b34-b4dc-96185eae9bec
-# ╠═fc97b29b-9370-4e12-ac3d-61cc3ab831f7
-# ╠═febe189b-6aef-440e-93e3-c62c4e84a6eb
-# ╠═32603b51-a31d-4790-861a-3c027db655db
-# ╠═a0deba76-8a95-4e71-a87c-52283af15a97
-# ╠═f5da61bd-6154-4083-a11b-6a203a2079df
-# ╠═0392b7bb-dd4c-4fcb-b57a-ad35311946f8
-# ╠═23d7b167-4ce3-4991-9fbd-9e48898074d0
-# ╠═4eee3025-6a55-41f1-94b3-2d6791e61257
-# ╠═6f54c03a-4ecd-47e5-ba7e-0a3d32b97003
-# ╠═fe0f6e86-bd20-42f2-a1cf-e98c292c3c5b
-# ╠═9a86bebd-2eb7-4a96-93bc-6114a61ddf9d
-# ╠═8c5fbdf4-4920-4a13-a40a-cf2981868b7e
-# ╠═0510381c-c5c7-4dc0-b9b8-984f497cc6e5
-# ╠═6f08ba0a-d3e0-4944-b3c1-258c1fab8d8d
-# ╠═ec827bac-c0c4-4b69-8d90-655caa262481
-# ╠═ee717841-ec9f-49e2-8e88-76a8e79db970
-# ╠═b32fda0d-4548-415b-b1eb-953a4a0a9641
-# ╠═d85ee79a-1bae-4c9c-850e-74d5867795c4
-# ╠═17404900-4e50-4472-933c-458734f77d49
-# ╠═75e7ef11-0755-483f-abff-6bc72284ae9a
-# ╟─d9030718-fe65-4a1e-8cda-7af21b0ee458
-# ╠═fb358092-3af3-49f9-8dcb-cbb7c505e830
-# ╠═daa64d26-5aae-4a4d-82a4-5f082251bafa
-# ╠═9b35db3f-d0c9-429e-9155-07982db84b35
-# ╠═d4d849e1-bee4-40f2-bae1-de299d44bfe7
-# ╠═6c47327e-8bf6-4a2c-bf97-1058a7da2dd3
-# ╠═a35a03b4-9080-43fd-8591-1ceb3c2dbd4b
-# ╠═3f3e926d-0125-4b80-9eb1-4d21f40610a3
-# ╠═c1177a92-9154-4634-95da-b5dfcdbca636
-# ╠═792262d3-335e-41cb-b206-f18c7c858cfc
-# ╠═7568e14a-a5cd-4a7c-aad6-fe385b4b6ee0
-# ╠═c27353e2-6ef7-4124-9e17-78fe739bd6df
-# ╟─a90bb5e0-4ea7-4eba-9c95-5b7e3d3a8618
-# ╠═bc537547-e6e6-428a-9a3d-14bb63199ff3
-# ╠═122a0f69-f229-4942-b2c7-4232677169cf
-# ╠═0cb70469-093f-4132-8845-14a956a13f9d
-# ╠═60ced504-525f-47ee-89ca-ce8bac38825f
-# ╠═906c0ee5-d02a-46a9-a344-e144c82a60b2
-# ╠═e1db3fba-2ee7-4c7d-8a37-55ba219eb93f
-# ╠═5d1196a3-f698-47e3-a7da-a9dcbe5be81e
-# ╠═a569e02c-a546-465f-94d2-4cbb9826281f
-# ╠═a6cc5fbb-3a12-4de6-ab7b-8151ddfdfe30
-# ╠═ed6c6519-54fb-48f3-8233-53b64ae1233c
-# ╠═b1e78c65-f530-41ce-a08a-d113433568e9
-# ╠═8e2217b3-ef3c-4f25-bf3c-9c16933090dc
-# ╠═c17819f7-b446-471d-90bd-79c2e2a778fe
-# ╠═d838413a-dc20-4df7-9bc4-a7666e972a94
-# ╠═bf3ee2e3-3637-4827-a6b5-629b564c1c25
-# ╠═66ce8e1d-c816-49e0-9275-6332d3339e86
-# ╠═1b4a817b-7b66-42e9-8d33-ae25243220a6
-# ╠═dd911ca6-e41f-4192-979c-7dc7017c8568
-# ╠═850db5d8-f5f6-48be-9496-51860e38f129
-# ╠═b81081c0-c4b1-45f3-9533-90fa4a593267
-# ╠═6f054971-f602-4b8d-9f9c-87ebf80eb756
-# ╠═5e65bb1c-9f30-46ae-9f70-9f8cc1b1d5a8
-# ╠═24694e29-8f91-440a-9ddb-12b4653e72a2
-# ╠═18e2137e-7f4e-4e22-b434-92a478a86326
-# ╠═169d5c32-8fa3-46f0-bc70-1ea72b3b3a55
-# ╠═47317edc-2229-4b66-a36c-f180fead7d99
-# ╠═11c9a924-677c-48b0-a613-0c567acbc93e
-# ╠═fd3d454e-f0c4-4dfd-b488-bfc46e294cf4
-# ╠═ff4858ee-ae91-473c-8cd9-812720ec0e9d
-# ╠═ed06b821-0710-4a48-ad25-7ccb4343dacb
-# ╠═484aa27e-7509-44e9-b269-86b9ab839973
-# ╠═1667da50-0575-41a2-afaf-899b1b5256ef
-# ╠═ca6f3cfd-326d-4d55-99d8-ebc99741d9e3
-# ╠═20a4092f-dbef-4e79-ba02-58a2c2239786
-# ╠═b88f3720-a6f0-4cb4-8caa-73a41078b57d
-# ╠═dbc53e20-619d-4879-b46b-c30bab0fd9ef
-# ╠═b8568d67-149c-4b05-959d-da68c9cce24a
-# ╠═ee7b024b-2372-42aa-aac4-a5f4b6dfe1b8
-# ╠═b80f1681-9e80-47ad-9251-8c96a7a78217
-# ╠═daf41caa-a4da-4af9-9dc8-f609e81a7ed9
-# ╟─62abf93c-a750-4119-b0db-ffbcc6d639e7
-# ╠═3c005c45-1902-43a7-af6b-c828e26a7407
-# ╟─e04204bd-e9dc-4e0c-bf8b-d14e1081d2ec
-# ╠═5363e1fd-8ba2-445b-8f1f-353f94cb88a0
-# ╠═2dbdef20-5c4a-4dc5-a009-c1382a97bc04
-# ╠═5e9ee408-00fe-4137-89bf-5d3681499fb4
-# ╠═e75dfd47-2be5-4152-9e33-554686fd61ef
-# ╠═ac3f9948-73a6-4825-a32d-87ab1213de74
-# ╠═deea5c6c-68e1-4457-86b7-be0468037482
-# ╠═9bc09662-419f-40df-8d32-040a90a4036a
+# ╟─6c843526-c610-4606-9db1-5469fad46e9a
+# ╟─1e5a55a7-0c64-41d7-b7ca-25356be4a0f8
+# ╟─3849b625-12b8-4b0c-b893-10bea5bec05f
+# ╟─9be5da64-88f5-45f3-be43-74c598a1ff6a
+# ╟─e3c3a47e-e77e-4555-a8e3-1320ea9101a4
+# ╟─45c803aa-3905-4f3c-9fd8-203f3574ef9f
+# ╟─be211c5b-3eab-466f-abeb-c900ceaec05b
+# ╠═0cc786f0-a50f-11ef-1124-fbdbbb7c69b3
+# ╠═624f4b45-c518-47fa-9f4e-fcc2155dac1d
+# ╠═ccb7b862-df6c-43fb-a42e-e8308509019e
+# ╠═8ecd0fac-c9db-4996-bb38-2d12689e5da4
+# ╠═db7e86cb-265d-4026-9bb8-a2ba09af4e54
+# ╠═6e02001e-f179-47d9-a402-ee49df529bc9
+# ╠═0c9fab2f-d78d-4d7e-b75e-24c31a71a874
+# ╟─ac1c22c8-eb6c-415f-a897-74f7bdf25360
+# ╠═b9b88780-34e8-44bd-962c-6c27b7a5bdc7
+# ╠═1b63c404-15de-42e0-9e11-23f7e8845fa0
+# ╠═eae93a04-2838-4e76-87df-c991ef4d0d87
+# ╠═67c25763-1bb5-4f02-bf61-4ed2d5dc79c5
+# ╠═f4a8480d-d62e-44ab-acb8-2d2c779caea5
+# ╠═f14daa4a-4b6b-4438-af62-06e5f918c318
+# ╠═d89e9a1c-e39e-4e0b-8b6e-cc0b3c7a2f8e
+# ╠═c55038f8-a8f2-406e-90d7-013f06c29ae7
+# ╠═049d014c-dc60-4bf3-9c6e-96be466e8775
+# ╠═ee7b1f74-d4e6-48d3-a5d4-e70294d7e6b0
+# ╠═8d09cbcf-e421-4f32-911c-e28565afff3b
+# ╠═be2d3404-270d-4d7b-ab2d-15acde813b28
+# ╠═b999cb05-7454-4bb9-bfaa-0cc9dca2fd82
+# ╠═1a3e608e-71e4-4d9c-92d9-ecc08bd03b0c
+# ╠═9c07b430-3199-4be5-9cef-94773193fa85
+# ╠═52ef7b59-4e08-490d-a89f-c7fc9c0c39c8
+# ╠═2abd0531-812e-484e-b7bc-4f045be6f777
+# ╠═4805b26d-2ed0-46b5-9286-f160b30b4cb9
+# ╠═1ea239a7-8263-4d12-a1e3-7f35183260ba
+# ╠═0551f5be-d362-4204-bfeb-ca7ef8474013
+# ╠═3ad28df4-5cbf-452c-abae-85241ff1ba4f
+# ╟─640f864a-3c20-4a47-8fd5-92bc1ad23349
+# ╠═a1dd59a4-7ceb-4384-8a5b-71c9f7aacb70
+# ╠═36a62fa8-f9a6-4409-bce1-dfffecb1fc6c
+# ╠═c64288e3-60be-4b7d-8dd3-8f64a1de5e69
+# ╠═616dc57f-717e-4465-81e5-a3fe0b4c5592
+# ╠═10e386c2-ec87-4219-81b9-3c71b1c6edc7
+# ╠═018224cb-6e74-4a5f-966a-85a6fb571b44
+# ╠═9d924e36-b736-49f5-b3e5-456a63737973
+# ╠═0b3792e2-709c-42a9-adc8-22aca86d9825
+# ╠═d1679994-b5b7-4894-8f0e-be54951065c8
+# ╠═e2eb041c-f501-42de-ad32-0a8cfbe887a4
+# ╠═380cf422-e6e0-4d73-82ed-b7752647b40a
+# ╠═8edc181b-29c7-4cb6-9d44-c1396d8bb9e8
+# ╠═786b8517-2fdc-4491-a171-beeb5d330e71
+# ╠═43cb71e1-c5ae-4da0-aa79-83ddc912651c
+# ╠═9b03b118-3d18-4b2e-97a0-ec1a05c4a0cb
+# ╠═23e0a976-425f-4ee9-80ad-76199d0ada6b
+# ╠═3ab0b98e-81c3-4d5f-80cf-2be79cf5e988
+# ╟─ab7a46d5-8d87-4ca3-8e89-5414e6cc1141
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
