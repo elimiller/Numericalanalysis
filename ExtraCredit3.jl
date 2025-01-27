@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.46
+# v0.20.4
 
 using Markdown
 using InteractiveUtils
@@ -64,6 +64,19 @@ function doublefactorial(n)
 	return product
 end
 
+# ╔═╡ 765f0ef5-d1a8-497d-9110-46d854ada83b
+md"""
+The formula derived for the integral $I_k = \int_{-\infty}^{\infty}e^{-t^{2}}t^{k}dt$ is as follows
+$I_k = \begin{cases}
+\dfrac{(k-1)!!}{2^{(\dfrac{k}{2})}}\sqrt{\pi} & \text{if k is even}\\
+0 & \text{if k is odd}
+\end{cases}$
+
+Where $n!! = n*(n-2)*(n-4)*...*(n-(n-1)?(n-n))$
+
+The (n-1)?(n-n) means the last term depends on whether n is even or odd
+"""
+
 # ╔═╡ ccb7b862-df6c-43fb-a42e-e8308509019e
 function innerproduct(f,g)
 	h = polynomialfoil(f,g)
@@ -107,6 +120,14 @@ innerproduct(B[13],B[13])
 
 # ╔═╡ 0c9fab2f-d78d-4d7e-b75e-24c31a71a874
 innerproduct(B[13],B[12])
+
+# ╔═╡ 3c1fbadb-722a-4fbf-9ed3-32c2ac105c48
+innerproduct(B[9],B[9])
+
+# ╔═╡ 10e69088-95df-40a0-bbd1-7ea70809eef9
+md"""
+Build "identity" here
+"""
 
 # ╔═╡ ac1c22c8-eb6c-415f-a897-74f7bdf25360
 md"""
@@ -266,8 +287,11 @@ function Gauss(B,n,f,k)
 	return 2*sum #Can't forget factor of two from substitution of differential
 end
 
+# ╔═╡ 2de2a0db-45e1-46e0-acaf-a9cc951f56b3
+intcalculatorvalues = (1/sqrt(4pi)).*[3.875197554120239,3.326488800239226,2.225158038987561,1.590644453177028]
+
 # ╔═╡ 018224cb-6e74-4a5f-966a-85a6fb571b44
-[Gauss(B,12,f,i) for i = 0:3]
+[Gauss(B,12,f,i) for i = 0:3] #n = 12 evaluated at all sample points
 
 # ╔═╡ 9d924e36-b736-49f5-b3e5-456a63737973
 [Gauss(B,11,f,i) for i = 0:3]
@@ -307,6 +331,14 @@ md"""
 Am able to get three significant digits of accuracy using this Gauss method, any more digits would be difficult
 """
 
+# ╔═╡ 0c658046-9a18-42db-aeac-e41ba3fcc284
+md"""
+Based on physical approximation, the F(y) should be 0 far from the origin
+"""
+
+# ╔═╡ 384fedb4-464e-44ed-97e4-9f753e7a59c9
+
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -317,12 +349,13 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.10.4"
+julia_version = "1.11.2"
 manifest_format = "2.0"
 project_hash = "ac1187e548c6ab173ac57d4e72da1620216bce54"
 
 [[deps.Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
+version = "1.11.0"
 
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
@@ -331,37 +364,42 @@ version = "1.1.1+0"
 
 [[deps.Libdl]]
 uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
+version = "1.11.0"
 
 [[deps.LinearAlgebra]]
 deps = ["Libdl", "OpenBLAS_jll", "libblastrampoline_jll"]
 uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+version = "1.11.0"
 
 [[deps.OpenBLAS_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
 uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
-version = "0.3.23+4"
+version = "0.3.27+1"
 
 [[deps.libblastrampoline_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850b90-86db-534c-a0d3-1478176c7d93"
-version = "5.8.0+1"
+version = "5.11.0+0"
 """
 
 # ╔═╡ Cell order:
 # ╟─6c843526-c610-4606-9db1-5469fad46e9a
 # ╟─1e5a55a7-0c64-41d7-b7ca-25356be4a0f8
-# ╟─3849b625-12b8-4b0c-b893-10bea5bec05f
+# ╠═3849b625-12b8-4b0c-b893-10bea5bec05f
 # ╟─9be5da64-88f5-45f3-be43-74c598a1ff6a
 # ╟─e3c3a47e-e77e-4555-a8e3-1320ea9101a4
 # ╟─45c803aa-3905-4f3c-9fd8-203f3574ef9f
 # ╟─be211c5b-3eab-466f-abeb-c900ceaec05b
 # ╠═0cc786f0-a50f-11ef-1124-fbdbbb7c69b3
 # ╠═624f4b45-c518-47fa-9f4e-fcc2155dac1d
+# ╟─765f0ef5-d1a8-497d-9110-46d854ada83b
 # ╠═ccb7b862-df6c-43fb-a42e-e8308509019e
 # ╠═8ecd0fac-c9db-4996-bb38-2d12689e5da4
 # ╠═db7e86cb-265d-4026-9bb8-a2ba09af4e54
 # ╠═6e02001e-f179-47d9-a402-ee49df529bc9
 # ╠═0c9fab2f-d78d-4d7e-b75e-24c31a71a874
+# ╠═3c1fbadb-722a-4fbf-9ed3-32c2ac105c48
+# ╠═10e69088-95df-40a0-bbd1-7ea70809eef9
 # ╟─ac1c22c8-eb6c-415f-a897-74f7bdf25360
 # ╠═b9b88780-34e8-44bd-962c-6c27b7a5bdc7
 # ╠═1b63c404-15de-42e0-9e11-23f7e8845fa0
@@ -390,6 +428,7 @@ version = "5.8.0+1"
 # ╠═c64288e3-60be-4b7d-8dd3-8f64a1de5e69
 # ╠═616dc57f-717e-4465-81e5-a3fe0b4c5592
 # ╠═10e386c2-ec87-4219-81b9-3c71b1c6edc7
+# ╠═2de2a0db-45e1-46e0-acaf-a9cc951f56b3
 # ╠═018224cb-6e74-4a5f-966a-85a6fb571b44
 # ╠═9d924e36-b736-49f5-b3e5-456a63737973
 # ╠═0b3792e2-709c-42a9-adc8-22aca86d9825
@@ -403,5 +442,7 @@ version = "5.8.0+1"
 # ╠═23e0a976-425f-4ee9-80ad-76199d0ada6b
 # ╠═3ab0b98e-81c3-4d5f-80cf-2be79cf5e988
 # ╟─ab7a46d5-8d87-4ca3-8e89-5414e6cc1141
+# ╠═0c658046-9a18-42db-aeac-e41ba3fcc284
+# ╠═384fedb4-464e-44ed-97e4-9f753e7a59c9
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
